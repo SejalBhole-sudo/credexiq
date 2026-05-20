@@ -27,3 +27,21 @@ Current advantages:
 - audit engine already deterministic and modular
 
 Main architectural question now is how to version pricing snapshots cleanly without tightly coupling pricing comparison logic to the UI rendering layer.
+
+## 2026-05-20 13:40 - Audit persistence architecture started
+
+Began restructuring the audit engine to support historical pricing snapshots and future re-audit comparisons.
+
+Extracted pricing data into a centralized source to avoid coupling pricing logic directly to the audit engine implementation. This should simplify:
+- snapshot creation
+- pricing comparisons
+- future pricing updates
+- re-audit generation
+
+Decision made to preserve the existing reports flow for backward compatibility while introducing a dedicated `audits` table for Round 2 persistence requirements.
+
+Current focus is ensuring every audit stores:
+- user input stack
+- generated audit result
+- pricing snapshot used at generation time
+- user email association
