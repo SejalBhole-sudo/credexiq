@@ -8,6 +8,7 @@ export default function ResultsPage() {
   const router = useRouter()
 
   const [auditData, setAuditData] = useState(null)
+  const [storedFormData, setStoredFormData] = useState(null)
   const [summary, setSummary] = useState('')
   const [summaryLoading, setSummaryLoading] = useState(true)
   const [showEmailModal, setShowEmailModal] = useState(false)
@@ -26,10 +27,11 @@ export default function ResultsPage() {
     }
 
     const formData = JSON.parse(input)
+    setStoredFormData(formData)
     const result = runAudit(formData)
     setAuditData(result)
 
-    createShareableReport(result)
+    createShareableReport(result, formData)
 
     fetch('/api/summary', {
       method: 'POST',
@@ -37,9 +39,9 @@ export default function ResultsPage() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        auditResult: result,
-        useCase: formData.useCase,
-      }),
+  reportData: result,
+  formData,
+}),
     })
       .then((r) => r.json())
       .then((d) => {

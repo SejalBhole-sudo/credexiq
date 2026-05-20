@@ -61,3 +61,66 @@ Refactored pricing architecture by extracting all pricing data into a centralize
 Implemented pricing snapshot generation during audit creation so each audit stores the exact pricing state used at generation time.
 
 Also began implementing the pricing-change detection layer that will compare historical snapshots against current pricing data during re-audit processing.
+
+## 2026-05-20 16:20 - Re-audit invalidation flow started
+
+Began implementing the pricing invalidation engine responsible for determining whether previously generated audits are outdated under current pricing conditions.
+
+Initial implementation strategy:
+
+* compare historical pricing snapshots against current pricing data
+* rerun the audit engine against latest pricing
+* compare old and new recommendations to determine whether a meaningful audit change occurred
+
+Decided to treat recommendation-level changes as the true invalidation signal instead of relying only on raw pricing diffs. This reduces false positives where pricing changes do not materially affect the recommended stack.
+
+## 2026-05-20 17:05 - Manual detection endpoint implemented
+
+Connected the invalidation engine to a manual `/api/detect-changes` endpoint for local testing and reviewer verification.
+
+Chose a manual trigger approach instead of scheduled infrastructure during the initial implementation phase. The assignment explicitly allows manual triggers, and prioritizing end-to-end functionality over deployment orchestration felt like the better tradeoff under the 36-hour constraint window.
+
+Current endpoint flow:
+
+* fetch persisted audits
+* compare pricing snapshots
+* rerun audits using latest pricing
+* return affected audits and recommendation diffs
+
+## 2026-05-20 22:05 - Persistence payload debugging
+
+Started debugging issues with persisted `input_stack` data after re-audit execution surfaced invalid payload shapes during audit reruns.
+
+The invalidation engine itself appears structurally sound, but historical audits are currently storing incomplete input payloads, preventing deterministic re-audit execution.
+
+Focused debugging effort on:
+
+* frontend report payload serialization
+* report API persistence layer
+* localStorage → report generation data flow
+
+## 2026-05-20 23:07 - Re-audit data flow investigation
+
+Confirmed the current blocker is isolated to frontend-to-backend payload persistence rather than the pricing comparison architecture itself.
+
+Historical pricing snapshots, centralized pricing infrastructure, and re-audit orchestration are functioning as expected. Remaining issue is ensuring the original audit form payload persists correctly for future reruns.
+
+At this stage the implementation direction feels stable, and the remaining work appears significantly smaller in scope than the earlier architectural setup work.
+
+## 2026-05-20 23:49 - End of day checkpoint
+
+C## 2026-05-20 20:15 - End of day checkpoint
+
+Current Round 2 progress:
+
+* dedicated audit persistence
+* pricing snapshot generation
+* centralized pricing architecture
+* pricing invalidation engine foundation
+* manual change-detection endpoint
+* historical re-audit comparison flow
+
+Main remaining work is stabilizing persisted audit payloads for deterministic reruns, followed by notification email orchestration and diff-view rendering.
+
+Most architectural groundwork is now complete, and remaining implementation work is becoming more localized around payload flow and UI integration.
+

@@ -95,6 +95,7 @@ export async function POST(req) {
     }
 
     // Save audit log (non-blocking)
+    console.log("FORM DATA:", formData);
     const { error: auditError } = await supabase
       .from("audits")
       .insert([

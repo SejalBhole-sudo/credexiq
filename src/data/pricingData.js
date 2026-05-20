@@ -33,7 +33,7 @@ export const OFFICIAL_PRICING = {
   gemini: {
     Free: { pricePerSeat: 0, description: 'Free' },
     AIPlus: { pricePerSeat: 5, description: '₹399/mo (~$5)' },
-    AIPro: { pricePerSeat: 23, description: '₹1950/mo (~$23)' },
+    AIPro: { pricePerSeat: 28, description: '₹1950/mo (~$23)' },
     AIUltra: { pricePerSeat: 290, description: '₹24500/mo (~$290)' },
     Business: { pricePerSeat: 20, description: '$20/user/mo' },
     Enterprise: { pricePerSeat: 30, description: '$30/user/mo' },
