@@ -45,3 +45,19 @@ Current focus is ensuring every audit stores:
 - generated audit result
 - pricing snapshot used at generation time
 - user email association
+
+## 2026-05-20 15:05 - Persistent audit infrastructure completed
+
+Completed the first major Round 2 architectural milestone.
+
+Implemented persistent audit storage using a dedicated `audits` table separate from the existing public `reports` flow. This preserves backward compatibility for shareable reports while introducing historical audit persistence required for re-audit workflows.
+
+Refactored pricing architecture by extracting all pricing data into a centralized pricing source. This allows:
+- deterministic pricing snapshots
+- future pricing versioning
+- cleaner comparison logic
+- easier pricing updates
+
+Implemented pricing snapshot generation during audit creation so each audit stores the exact pricing state used at generation time.
+
+Also began implementing the pricing-change detection layer that will compare historical snapshots against current pricing data during re-audit processing.
