@@ -157,3 +157,24 @@ Confirmed the following flow:
 - return updated audit results
 
 This marks the first successful execution of the Round 2 change-detection pipeline using persisted audit history rather than simulated test data.
+
+## 2026-05-21 16:05 - Re-audit notification integration
+
+Integrated notification delivery into the change-detection workflow.
+
+Affected audits now trigger a dedicated re-audit notification path capable of generating user-facing update emails based on newly generated audit results. Delivery logic was isolated from core detection functionality to keep audit processing and notification concerns loosely coupled.
+
+Notification execution is designed to avoid blocking the detection pipeline if individual delivery attempts fail.
+
+## 2026-05-21 17:25 - Notification workflow validation
+
+Validated the notification integration path within the change-detection workflow.
+
+Affected audits now flow through:
+- historical audit retrieval
+- pricing comparison
+- audit regeneration
+- affected audit identification
+- notification dispatch preparation
+
+End-to-end testing confirmed that updated audit information can be generated and passed into downstream notification processing without interrupting the detection pipeline.
