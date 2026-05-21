@@ -10,12 +10,13 @@ export async function POST(req) {
     const body = await req.json();
 
     const {
-      email,
-      company,
-      role,
-      monthlySaving,
-      annualSaving,
-    } = body;
+  email,
+  company,
+  role,
+  monthlySaving,
+  annualSaving,
+  reportId,
+} = body;
 
     // Validate input
     if (!email || !company || !role) {
@@ -52,6 +53,22 @@ export async function POST(req) {
         { status: 500 }
       );
     }
+    // Link lead email to stored audit
+if (reportId) {
+  const { error: auditUpdateError } = await supabase
+    .from("audits")
+    .update({
+      user_email: email,
+    })
+    .eq("id", reportId);
+
+  if (auditUpdateError) {
+    console.error(
+      "Failed to update audit email:",
+      auditUpdateError
+    );
+  }
+}
 
     // Step 2: Try to send email (but don't fail if it doesn't work)
     let emailSent = false;

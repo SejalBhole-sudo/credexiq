@@ -239,3 +239,30 @@ The view now presents:
 - savings impact indicators
 
 A dedicated savings delta section was introduced to surface pricing-change impact immediately, reducing the need for manual comparison between audit versions and improving reviewer visibility into recommendation changes.
+
+## 2026-05-21 21:25 - Recommendation change detection refinement
+
+Reviewed change-detection output after observing recommendation updates being reported even when audit outcomes were functionally identical.
+
+The original implementation relied on full object comparison, which proved sensitive to serialization and object structure differences. Detection logic was refined to compare meaningful audit outcomes instead of raw object representations.
+
+This reduced false-positive re-audit triggers and improved confidence in pricing invalidation results.
+
+## 2026-05-21 21:50 - Audit-to-user association completed
+
+Connected lead capture with persisted audit records to satisfy notification requirements.
+
+Audit records are initially created during report generation, while user contact details are collected later through the lead capture flow. The lead submission process now associates the captured email address with the existing audit record, ensuring future re-audit notifications target the correct recipient.
+
+This closes the gap between audit persistence and notification delivery.
+
+## 2026-05-21 22:22 - Notification state persistence
+
+Extended the pricing-change workflow to persist notification status directly within stored audit records.
+
+Affected audits are now marked when pricing changes are detected and notification processing occurs. Notification timestamps are recorded to provide traceability for re-audit activity and simplify future operational monitoring.
+
+The change-detection workflow now tracks:
+- pricing invalidation status
+- notification execution timestamp
+- affected audit history

@@ -9,7 +9,7 @@ You are an expert AI infrastructure cost analyst.
 
 A user completed an AI spend audit.
 
-Current monthly spend: $${auditResult.totalCurrentSpend}
+Current monthly spend: $${reportData.totalCurrentSpend}
 Potential monthly savings: $${auditResult.totalMonthlySaving}
 Primary use case: ${useCase}
 

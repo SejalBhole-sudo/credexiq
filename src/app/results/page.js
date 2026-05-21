@@ -277,7 +277,13 @@ export default function ResultsPage() {
       </div>
 
       {/* Email Modal */}
-      {showEmailModal && <EmailModal auditData={auditData} onClose={() => setShowEmailModal(false)} />}
+      {showEmailModal && (
+  <EmailModal
+    auditData={auditData}
+    reportId={reportId}
+    onClose={() => setShowEmailModal(false)}
+  />
+)}
 
       {/* Notification Toast */}
       {notification.show && (
@@ -321,7 +327,11 @@ function generateFallbackSummary(result) {
   )}/month available through plan adjustments and better subscription alignment. While your current setup remains functional, certain tools appear slightly over-provisioned for the stated use case. Applying the recommended optimizations could improve long-term cost efficiency while maintaining the same overall workflow quality and productivity.`;
 }
 
-function EmailModal({ auditData, onClose }) {
+function EmailModal({
+  auditData,
+  reportId,
+  onClose,
+}) {
   const [formData, setFormData] = useState({
     email: '',
     company: '',
@@ -359,12 +369,13 @@ function EmailModal({ auditData, onClose }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: formData.email,
-          company: formData.company,
-          role: formData.role,
-          monthlySaving: auditData.totalMonthlySaving,
-          annualSaving: auditData.totalAnnualSaving,
-        }),
+  email: formData.email,
+  company: formData.company,
+  role: formData.role,
+  monthlySaving: auditData.totalMonthlySaving,
+  annualSaving: auditData.totalAnnualSaving,
+  reportId,
+}),
       })
 
       const data = await response.json()
