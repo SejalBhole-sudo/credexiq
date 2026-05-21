@@ -178,3 +178,17 @@ Affected audits now flow through:
 - notification dispatch preparation
 
 End-to-end testing confirmed that updated audit information can be generated and passed into downstream notification processing without interrupting the detection pipeline.
+
+## 2026-05-21 18:05 - Re-audit comparison view implemented
+
+Implemented a dedicated re-audit comparison page for reviewing historical versus regenerated audit outcomes.
+
+The comparison view retrieves persisted audit information, reruns the audit engine using the original input payload, and presents both historical and updated recommendations side-by-side.
+
+Current view highlights:
+- previous savings estimates
+- updated savings estimates
+- historical recommendations
+- regenerated recommendations
+
+This provides a reviewer-friendly visualization layer for pricing-change impacts without requiring additional persistence infrastructure.
