@@ -179,7 +179,7 @@ Affected audits now flow through:
 
 End-to-end testing confirmed that updated audit information can be generated and passed into downstream notification processing without interrupting the detection pipeline.
 
-## 2026-05-21 18:05 - Re-audit comparison view implemented
+## 2026-05-21 18:02 - Re-audit comparison view implemented
 
 Implemented a dedicated re-audit comparison page for reviewing historical versus regenerated audit outcomes.
 
@@ -192,3 +192,39 @@ Current view highlights:
 - regenerated recommendations
 
 This provides a reviewer-friendly visualization layer for pricing-change impacts without requiring additional persistence infrastructure.
+
+## 2026-05-21 19:20 - Re-audit comparison validation
+
+Validated the end-to-end comparison workflow using persisted audit records.
+
+Confirmed that:
+- audit records can be retrieved from persistence storage
+- original audit inputs can be replayed successfully
+- updated audit results are generated correctly
+- comparison data is rendered through the dedicated re-audit interface
+
+This completes the first operational version of the historical audit comparison experience required for Round 2.
+
+## 2026-05-21 19:45 - Notification consolidation workflow
+
+Refined the re-audit notification pipeline to align with the assignment requirement of user-centric notification delivery.
+
+Affected audits are now grouped by user before notification processing, preventing duplicate notifications when multiple audits belonging to the same user are impacted by a pricing update.
+
+This preserves notification relevance while reducing unnecessary email volume and keeping the change-detection workflow scalable.
+
+## 2026-05-21 20:10 - End-to-end notification validation
+
+Executed end-to-end testing of the re-audit notification workflow using persisted audit records.
+
+Validated the following sequence:
+
+- retrieve historical audits
+- detect pricing changes
+- identify affected audits
+- group affected audits by user
+- trigger notification workflow
+- return affected audit metadata
+
+Successful execution confirmed that notification processing remains non-blocking and does not interfere with pricing-change detection or audit regeneration workflows.
+

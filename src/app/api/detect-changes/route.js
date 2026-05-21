@@ -16,16 +16,34 @@ export async function GET() {
     }
 
     // detect affected audits
-    const affectedAudits =
+   const affectedAudits =
   await detectPricingChanges(audits);
 
-const emailPromises = affectedAudits.map((audit) =>
-  sendReauditEmail({
-    email: audit.email,
-    auditId: audit.auditId,
-    oldResult: audit.oldResult,
-    newResult: audit.newResult,
-  })
+// group audits by user email
+const auditsByEmail = {};
+
+for (const audit of affectedAudits) {
+  if (!audit.email) continue;
+
+  if (!auditsByEmail[audit.email]) {
+    auditsByEmail[audit.email] = [];
+  }
+
+  auditsByEmail[audit.email].push(audit);
+}
+
+// send ONE email per user
+const emailPromises = Object.entries(auditsByEmail).map(
+  async ([email, audits]) => {
+    const latestAudit = audits[0];
+
+    return sendReauditEmail({
+      email,
+      auditId: latestAudit.auditId,
+      oldResult: latestAudit.oldResult,
+      newResult: latestAudit.newResult,
+    });
+  }
 );
 
 await Promise.allSettled(emailPromises);
@@ -34,6 +52,8 @@ return NextResponse.json({
   success: true,
   affectedAudits,
 });
+
+
   } catch (error) {
     console.error("Detect changes failed:", error);
 
