@@ -19,8 +19,10 @@ export async function detectPricingChanges(audits) {
     );
 
     const recommendationChanged =
-      JSON.stringify(audit.output_result) !==
-      JSON.stringify(newAuditResult);
+  audit.output_result.totalMonthlySaving !==
+    newAuditResult.totalMonthlySaving ||
+  audit.output_result.totalAnnualSaving !==
+    newAuditResult.totalAnnualSaving;
 
     affectedAudits.push({
       auditId: audit.id,

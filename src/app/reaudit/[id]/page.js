@@ -35,6 +35,14 @@ console.log("AUDIT ERROR:", error);
     audit.input_stack
   );
 
+  const monthlyDelta =
+  (newResult.totalMonthlySaving || 0) -
+  (oldResult.totalMonthlySaving || 0);
+
+const annualDelta =
+  (newResult.totalAnnualSaving || 0) -
+  (oldResult.totalAnnualSaving || 0);
+
   return (
     <main className="min-h-screen bg-[#0B1120] text-white px-4 py-12">
       <div className="max-w-5xl mx-auto">
@@ -45,11 +53,43 @@ console.log("AUDIT ERROR:", error);
             🔄 Audit Update
           </h1>
 
+            
           <p className="text-gray-400">
             Comparing historical audit results with
             recommendations generated using current pricing data.
           </p>
         </div>
+
+        {/* Savings Impact */}
+<div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-8">
+  <h2 className="text-2xl font-bold mb-4">
+    Savings Impact
+  </h2>
+
+  <div className="grid md:grid-cols-2 gap-6">
+
+    <div>
+      <p className="text-gray-400">
+        Monthly Savings Change
+      </p>
+
+      <p className="text-3xl font-black text-green-400">
+        ${monthlyDelta.toFixed(2)}
+      </p>
+    </div>
+
+    <div>
+      <p className="text-gray-400">
+        Annual Savings Change
+      </p>
+
+      <p className="text-3xl font-black text-cyan-400">
+        ${annualDelta.toFixed(2)}
+      </p>
+    </div>
+
+  </div>
+</div>
 
         {/* Savings Comparison */}
         <div className="grid md:grid-cols-2 gap-6 mb-10">
@@ -190,3 +230,4 @@ console.log("AUDIT ERROR:", error);
     </main>
   );
 }
+

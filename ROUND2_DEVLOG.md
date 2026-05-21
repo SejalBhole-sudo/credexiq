@@ -228,3 +228,14 @@ Validated the following sequence:
 
 Successful execution confirmed that notification processing remains non-blocking and does not interfere with pricing-change detection or audit regeneration workflows.
 
+## 2026-05-21 20:40 - Re-audit comparison experience completed
+
+Completed the first production-ready version of the re-audit comparison interface.
+
+The view now presents:
+- historical audit results
+- regenerated audit results
+- recommendation comparisons
+- savings impact indicators
+
+A dedicated savings delta section was introduced to surface pricing-change impact immediately, reducing the need for manual comparison between audit versions and improving reviewer visibility into recommendation changes.

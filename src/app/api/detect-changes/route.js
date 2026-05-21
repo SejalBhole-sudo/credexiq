@@ -47,6 +47,15 @@ const emailPromises = Object.entries(auditsByEmail).map(
 );
 
 await Promise.allSettled(emailPromises);
+for (const audit of affectedAudits) {
+  await supabase
+    .from("audits")
+    .update({
+      pricing_changed: true,
+      notified_at: new Date().toISOString(),
+    })
+    .eq("id", audit.auditId);
+}
 
 return NextResponse.json({
   success: true,
