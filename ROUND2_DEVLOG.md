@@ -109,8 +109,6 @@ At this stage the implementation direction feels stable, and the remaining work 
 
 ## 2026-05-20 23:49 - End of day checkpoint
 
-C## 2026-05-20 20:15 - End of day checkpoint
-
 Current Round 2 progress:
 
 * dedicated audit persistence
@@ -124,3 +122,38 @@ Main remaining work is stabilizing persisted audit payloads for deterministic re
 
 Most architectural groundwork is now complete, and remaining implementation work is becoming more localized around payload flow and UI integration.
 
+## 2026-05-21 08:20 - Audit payload persistence debugging
+
+Resumed investigation into re-audit failures after identifying that historical audits could not be rerun successfully.
+
+Tracing the execution flow revealed that persisted audit records were storing incomplete input payloads, causing the audit engine to receive invalid data structures during re-audit execution. Focus shifted away from the invalidation engine itself and toward the report persistence pipeline responsible for storing original audit inputs.
+
+Verified that pricing snapshots, audit storage, and change-detection orchestration remained structurally sound.
+
+## 2026-05-21 09:17 - Report persistence flow corrected
+
+Located a payload propagation issue between the results page and the report persistence endpoint.
+
+Updated report creation flow to persist the original audit input alongside generated audit results, ensuring future re-audit executions have access to the same input context used during initial generation.
+
+Verified that audit records now persist:
+- original audit input
+- generated audit output
+- pricing snapshot
+- audit identifiers and timestamps
+
+This restores deterministic audit reruns and satisfies the persistence requirements needed for historical comparisons.
+
+## 2026-05-21 09:42 - End-to-end re-audit validation
+
+Successfully validated the complete re-audit workflow against persisted audit records.
+
+Confirmed the following flow:
+- load historical audit data
+- retrieve stored pricing snapshot
+- compare against current pricing
+- rerun audit generation
+- identify affected audits
+- return updated audit results
+
+This marks the first successful execution of the Round 2 change-detection pipeline using persisted audit history rather than simulated test data.

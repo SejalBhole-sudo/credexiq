@@ -58,8 +58,9 @@ export default function ResultsPage() {
       })
   }, [])
 
-  const createShareableReport = async (result) => {
+  const createShareableReport = async (result, formData) => {
     try {
+      console.log("SENDING FORM DATA:", formData);
       const response = await fetch('/api/report', {
         method: 'POST',
         headers: {
@@ -67,6 +68,7 @@ export default function ResultsPage() {
         },
         body: JSON.stringify({
           reportData: result,
+          formData,
         }),
       })
 
