@@ -318,3 +318,17 @@ Validation confirmed that pricing updates propagate through audit recomputation 
 Improved the re-audit notification experience by expanding email content beyond basic savings values.
 
 Notifications now communicate the impact of pricing updates through explicit monthly and annual savings deltas while providing a direct link to the re-audit comparison interface. This reduces friction between pricing change detection and audit review, allowing affected users to immediately inspect updated recommendations and savings outcomes.
+
+## 2026-05-22 18:00 - Re-audit navigation accessibility improvement
+
+Improved discoverability of the re-audit workflow by introducing a dedicated re-audit action directly within the audit results experience.
+
+Previously, access to historical audit comparisons primarily relied on notification-driven workflows. Users can now open the corresponding re-audit comparison page directly from the results screen immediately after audit generation.
+
+The new action provides a faster path to:
+- historical audit review
+- recommendation comparison
+- savings impact validation
+- pricing change verification
+
+This reduces navigation friction and makes the re-audit functionality more visible during normal product usage.

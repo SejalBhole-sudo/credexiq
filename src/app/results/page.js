@@ -273,6 +273,19 @@ export default function ResultsPage() {
           </button>
         </div>
 
+        {reportId && (
+  <div className="flex justify-center mt-3">
+    <a
+      href={`/reaudit/${reportId}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-semibold px-6 py-3 rounded-xl hover:shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all"
+    >
+      🔄 Re-run Audit →
+    </a>
+  </div>
+)}
+
         {/* Footer */}
         <div className="text-center text-gray-500 text-xs">
           <p>CredexIQ © 2026</p>
