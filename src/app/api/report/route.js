@@ -1,13 +1,18 @@
 import { supabase } from "@/lib/supabase";
+import { createPricingSnapshot } from "@/lib/pricingSnapshot";
 
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { reportData } = body;
+
+    const {
+      reportData,
+      email,
+      formData,
+    } = body;
 
     // Validate input
     if (!reportData) {
-      console.warn("No report data provided");
       return Response.json(
         {
           success: false,
@@ -17,30 +22,28 @@ export async function POST(req) {
       );
     }
 
-    // Verify environment variables are configured
+    // Check environment variables
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-      console.error("Missing NEXT_PUBLIC_SUPABASE_URL environment variable");
       return Response.json(
         {
           success: false,
-          error: "Server not configured: Missing Supabase URL",
+          error: "Missing Supabase URL",
         },
         { status: 500 }
       );
     }
 
     if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      console.error("Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable");
       return Response.json(
         {
           success: false,
-          error: "Server not configured: Missing Supabase key",
+          error: "Missing Supabase key",
         },
         { status: 500 }
       );
     }
 
-    // Attempt to insert into database
+    // Insert report into reports table
     const { data, error } = await supabase
       .from("reports")
       .insert([
@@ -51,7 +54,7 @@ export async function POST(req) {
       .select()
       .single();
 
-    // Handle database errors
+    // Handle insert errors
     if (error) {
       console.error("Database insertion error:", {
         message: error.message,
@@ -60,15 +63,14 @@ export async function POST(req) {
         hint: error.hint,
       });
 
-      // Provide specific error messages based on error type
       let userMessage = "Failed to save report";
-      
+
       if (error.code === "42P01") {
-        userMessage = "Database table 'reports' not found. Please create it.";
+        userMessage = "Reports table not found";
       } else if (error.code === "42501") {
-        userMessage = "Permission denied. Table permissions need to be configured.";
+        userMessage = "Permission denied";
       } else if (error.code === "23505") {
-        userMessage = "Duplicate entry. This report already exists.";
+        userMessage = "Duplicate report";
       }
 
       return Response.json(
@@ -76,15 +78,13 @@ export async function POST(req) {
           success: false,
           error: userMessage,
           code: error.code,
-          details: error.message,
         },
         { status: 500 }
       );
     }
 
-    // Verify data was returned
+    // Verify insert returned data
     if (!data || !data.id) {
-      console.error("No ID returned from database insert", { data });
       return Response.json(
         {
           success: false,
@@ -94,6 +94,30 @@ export async function POST(req) {
       );
     }
 
+    // Determine email - use explicit email param first, fallback to formData if needed
+   const userEmail =
+  email?.trim() ||
+  "unknown@example.com";
+    
+    // Save audit log (non-blocking)
+    const { error: auditError } = await supabase
+      .from("audits")
+      .insert([
+        {
+          id: data.id,
+          user_email: userEmail,
+          input_stack: formData || {},
+          output_result: reportData,
+          pricing_snapshot: createPricingSnapshot(),
+        },
+      ]);
+
+    // Audit errors should not fail main request
+    if (auditError) {
+      console.error("Audit persistence error:", auditError);
+    }
+
+    // Success response
     return Response.json({
       success: true,
       id: data.id,
@@ -109,7 +133,7 @@ export async function POST(req) {
     return Response.json(
       {
         success: false,
-        error: `Error: ${error.message}`,
+        error: error.message || "Internal server error",
       },
       { status: 500 }
     );

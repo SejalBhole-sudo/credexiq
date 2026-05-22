@@ -2,8 +2,10 @@
 
 export async function POST(req) {
   try {
-    const { auditResult, useCase } = await req.json();
+    const { reportData, formData } = await req.json();
 
+const auditResult = reportData;
+const useCase = formData?.useCase || "general";
     const prompt = `
 You are an expert AI infrastructure cost analyst.
 

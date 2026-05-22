@@ -8,12 +8,14 @@ export default function ResultsPage() {
   const router = useRouter()
 
   const [auditData, setAuditData] = useState(null)
+  const [storedFormData, setStoredFormData] = useState(null)
   const [summary, setSummary] = useState('')
   const [summaryLoading, setSummaryLoading] = useState(true)
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [reportId, setReportId] = useState(null)
   const [mounted, setMounted] = useState(false)
   const [notification, setNotification] = useState({ show: false, message: '', type: '' })
+  const [userEmail, setUserEmail] = useState(null)
 
   useEffect(() => {
     setMounted(true)
@@ -26,10 +28,11 @@ export default function ResultsPage() {
     }
 
     const formData = JSON.parse(input)
+    setStoredFormData(formData)
     const result = runAudit(formData)
     setAuditData(result)
 
-    createShareableReport(result)
+    createShareableReport(result, formData, null)
 
     fetch('/api/summary', {
       method: 'POST',
@@ -37,9 +40,9 @@ export default function ResultsPage() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        auditResult: result,
-        useCase: formData.useCase,
-      }),
+  reportData: result,
+  formData,
+}),
     })
       .then((r) => r.json())
       .then((d) => {
@@ -56,15 +59,18 @@ export default function ResultsPage() {
       })
   }, [])
 
-  const createShareableReport = async (result) => {
+  const createShareableReport = async (result, formData, email) => {
     try {
       const response = await fetch('/api/report', {
+        
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           reportData: result,
+          formData,
+          email: email || null,
         }),
       })
 
@@ -266,6 +272,19 @@ export default function ResultsPage() {
           </button>
         </div>
 
+        {reportId && (
+  <div className="flex justify-center mt-3">
+    <a
+      href={`/reaudit/${reportId}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-semibold px-6 py-3 rounded-xl hover:shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all"
+    >
+      🔄 Re-run Audit →
+    </a>
+  </div>
+)}
+
         {/* Footer */}
         <div className="text-center text-gray-500 text-xs">
           <p>CredexIQ © 2026</p>
@@ -273,7 +292,18 @@ export default function ResultsPage() {
       </div>
 
       {/* Email Modal */}
-      {showEmailModal && <EmailModal auditData={auditData} onClose={() => setShowEmailModal(false)} />}
+      {showEmailModal && (
+  <EmailModal
+    auditData={auditData}
+    reportId={reportId}
+    onClose={() => setShowEmailModal(false)}
+    onEmailSubmitted={(email) => {
+      setUserEmail(email)
+      // Recreate report with email now that we have it
+      createShareableReport(auditData, storedFormData, email)
+    }}
+  />
+)}
 
       {/* Notification Toast */}
       {notification.show && (
@@ -317,7 +347,12 @@ function generateFallbackSummary(result) {
   )}/month available through plan adjustments and better subscription alignment. While your current setup remains functional, certain tools appear slightly over-provisioned for the stated use case. Applying the recommended optimizations could improve long-term cost efficiency while maintaining the same overall workflow quality and productivity.`;
 }
 
-function EmailModal({ auditData, onClose }) {
+function EmailModal({
+  auditData,
+  reportId,
+  onClose,
+  onEmailSubmitted,
+}) {
   const [formData, setFormData] = useState({
     email: '',
     company: '',
@@ -355,12 +390,13 @@ function EmailModal({ auditData, onClose }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: formData.email,
-          company: formData.company,
-          role: formData.role,
-          monthlySaving: auditData.totalMonthlySaving,
-          annualSaving: auditData.totalAnnualSaving,
-        }),
+  email: formData.email,
+  company: formData.company,
+  role: formData.role,
+  monthlySaving: auditData.totalMonthlySaving,
+  annualSaving: auditData.totalAnnualSaving,
+  reportId,
+}),
       })
 
       const data = await response.json()
@@ -368,6 +404,8 @@ function EmailModal({ auditData, onClose }) {
       if (response.ok && data.success) {
         setMessage('✅ Report sent! Check your email.')
         setMessageType('success')
+        // Notify parent that email was submitted
+        onEmailSubmitted(formData.email)
         setTimeout(() => {
           onClose()
         }, 1500)
