@@ -332,3 +332,68 @@ The new action provides a faster path to:
 - pricing change verification
 
 This reduces navigation friction and makes the re-audit functionality more visible during normal product usage.
+
+## 2026-05-22 18:45 - Audit persistence and pricing snapshot storage
+
+Implemented persistent audit storage for generated reports and captured pricing snapshots at audit creation time.
+
+Each audit now stores:
+- user audit inputs
+- generated recommendations
+- savings calculations
+- pricing data snapshot used during generation
+
+This establishes a historical audit record that remains reproducible even when future pricing information changes.
+
+The stored snapshot enables accurate comparison between historical recommendations and future recalculated audit results.
+
+## 2026-05-22 19.25 - Pricing change detection workflow
+
+Implemented pricing change detection against historical audit snapshots.
+
+The detection workflow compares current pricing information against pricing data captured during audit generation and identifies audits affected by pricing updates.
+
+Detected changes trigger:
+- audit revalidation
+- recommendation recalculation
+- pricing impact analysis
+- notification eligibility
+
+This allows previously generated audits to remain actionable even after pricing structures evolve.
+
+## 2026-05-22 20:07 - Re-audit comparison experience
+
+Implemented a dedicated re-audit workflow for comparing historical recommendations against recalculated results.
+
+The re-audit experience provides visibility into:
+- previous monthly savings estimates
+- updated monthly savings estimates
+- annual savings impact
+- recommendation differences caused by pricing updates
+
+This creates a transparent comparison layer that helps users understand how pricing changes affect optimization opportunities.
+
+## 2026-05-22 21:07 - End-to-end notification testing and delivery verification
+
+Performed comprehensive testing of the pricing change notification pipeline across audit persistence, change detection, re-audit generation, and email delivery workflows.
+
+Validation included:
+- pricing snapshot comparison
+- affected audit detection
+- notification recipient resolution
+- re-audit generation
+- email dispatch verification
+- audit record updates
+
+A manual change detection endpoint was exposed for validation and demonstration purposes:
+
+/api/detect-changes
+
+Opening this endpoint triggers:
+- pricing comparison against stored snapshots
+- affected audit identification
+- recommendation recalculation
+- notification email generation
+- audit update processing
+
+This endpoint provides a simple mechanism for demonstrating and validating the complete pricing change monitoring workflow.

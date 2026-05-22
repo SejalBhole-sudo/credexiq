@@ -33,7 +33,9 @@ for (const audit of affectedAudits) {
 }
 
 // send ONE email per user
-const emailPromises = Object.entries(auditsByEmail).map(
+const emailPromises = Object.entries(auditsByEmail)
+  .filter(([email]) => email !== "unknown@example.com")
+  .map(
   async ([email, audits]) => {
     const latestAudit = audits[0];
 
@@ -45,7 +47,7 @@ const emailPromises = Object.entries(auditsByEmail).map(
     });
   }
 );
-
+console.log("Emails to send:", Object.keys(auditsByEmail));
 await Promise.allSettled(emailPromises);
 for (const audit of affectedAudits) {
   await supabase

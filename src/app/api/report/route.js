@@ -95,7 +95,8 @@ export async function POST(req) {
     }
 
     // Determine email - use explicit email param first, fallback to formData if needed
-    const userEmail = email && email.trim() ? email : "unknown@example.com";
+   const userEmail =
+  email?.trim() || null;
 
     console.log("Creating audit with email:", userEmail);
     console.log("FORM DATA:", formData);

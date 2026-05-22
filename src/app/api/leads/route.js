@@ -8,7 +8,6 @@ const resend = new Resend(
 export async function POST(req) {
   try {
     const body = await req.json();
-
     const {
   email,
   company,
@@ -97,6 +96,7 @@ if (reportId) {
           </div>
         `,
       });
+console.log("EMAIL RESPONSE:", emailResponse);
 
       emailSent = true;
     } catch (emailError) {

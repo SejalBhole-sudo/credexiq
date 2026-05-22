@@ -30,7 +30,12 @@ export async function detectPricingChanges(audits) {
     const oldAnnualSavings = audit.output_result.totalAnnualSaving || 0;
     const newAnnualSavings = newAuditResult.totalAnnualSaving || 0;
 
-    const recommendationChanged = oldSavings !== newSavings || oldAnnualSavings !== newAnnualSavings;
+    const recommendationChanged =
+  JSON.stringify(audit.output_result) !==
+  JSON.stringify(newAuditResult);
+if (!recommendationChanged) {
+  continue;
+}
 
     console.log(`Audit ${audit.id}: Old savings: $${oldSavings}, New savings: $${newSavings}, Changed: ${recommendationChanged}`);
 

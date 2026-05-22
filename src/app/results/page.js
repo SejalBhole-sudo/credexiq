@@ -64,6 +64,7 @@ export default function ResultsPage() {
       console.log("SENDING FORM DATA:", formData);
       console.log("SENDING EMAIL:", email);
       const response = await fetch('/api/report', {
+        
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

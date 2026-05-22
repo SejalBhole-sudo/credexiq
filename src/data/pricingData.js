@@ -24,7 +24,7 @@ export const OFFICIAL_PRICING = {
   chatgpt: {
     Free: { pricePerSeat: 0, description: 'Free' },
     Go: { pricePerSeat: 5, description: '₹399/mo India plan (~$5)' },
-    Plus: { pricePerSeat: 20, description: '$20/user/mo' },
+    Plus: { pricePerSeat: 50, description: '$20/user/mo' },
     Pro: { pricePerSeat: 120, description: '$120/user/mo' },
     Business: { pricePerSeat: 25, description: '$25/user/mo, min 2 seats' },
     Enterprise: { pricePerSeat: 60, description: 'Custom enterprise pricing' },
