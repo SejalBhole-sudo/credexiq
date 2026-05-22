@@ -13,12 +13,8 @@ export async function detectPricingChanges(audits) {
     const pricingChanged = hasPricingChanged(oldSnapshot, currentPricing);
 
     if (!pricingChanged) {
-      console.log(`Audit ${audit.id}: No pricing changes detected`);
       continue;
     }
-
-    console.log(`Audit ${audit.id}: Pricing detected as changed`);
-    console.log("INPUT STACK:", audit.input_stack);
 
     // Run new audit with current pricing
     const newAuditResult = runAudit(audit.input_stack);
@@ -37,7 +33,6 @@ if (!recommendationChanged) {
   continue;
 }
 
-    console.log(`Audit ${audit.id}: Old savings: $${oldSavings}, New savings: $${newSavings}, Changed: ${recommendationChanged}`);
 
     // Get human-readable pricing change summary
     const pricingChangeDetails = getPricingChangeSummary(oldSnapshot, currentPricing);

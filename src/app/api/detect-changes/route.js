@@ -47,7 +47,6 @@ const emailPromises = Object.entries(auditsByEmail)
     });
   }
 );
-console.log("Emails to send:", Object.keys(auditsByEmail));
 await Promise.allSettled(emailPromises);
 for (const audit of affectedAudits) {
   await supabase

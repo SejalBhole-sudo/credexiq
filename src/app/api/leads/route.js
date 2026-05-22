@@ -96,7 +96,6 @@ if (reportId) {
           </div>
         `,
       });
-console.log("EMAIL RESPONSE:", emailResponse);
 
       emailSent = true;
     } catch (emailError) {

@@ -98,11 +98,6 @@ export async function POST(req) {
    const userEmail =
   email?.trim() ||
   "unknown@example.com";
-
-console.log("Creating audit with email:", userEmail);
-
-    console.log("Creating audit with email:", userEmail);
-    console.log("FORM DATA:", formData);
     
     // Save audit log (non-blocking)
     const { error: auditError } = await supabase

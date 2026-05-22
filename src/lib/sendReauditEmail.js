@@ -19,10 +19,6 @@ export async function sendReauditEmail({
     (oldResult?.totalAnnualSaving || 0);
 
   try {
-    console.log("EMAIL PAYLOAD", {
-      to: email,
-      auditId,
-    });
 
     const response = await resend.emails.send({
       from: "CredexIQ <onboarding@resend.dev>",
@@ -85,8 +81,6 @@ export async function sendReauditEmail({
         </div>
       `,
     });
-
-    console.log("Resend response:", response);
 
     return !response.error;
   } catch (error) {

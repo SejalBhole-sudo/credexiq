@@ -61,8 +61,6 @@ export default function ResultsPage() {
 
   const createShareableReport = async (result, formData, email) => {
     try {
-      console.log("SENDING FORM DATA:", formData);
-      console.log("SENDING EMAIL:", email);
       const response = await fetch('/api/report', {
         
         method: 'POST',

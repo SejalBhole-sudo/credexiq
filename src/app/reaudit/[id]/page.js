@@ -3,15 +3,11 @@ import { runAudit } from "@/lib/auditEngine";
 
 export default async function ReauditPage({ params }) {
   const { id } = await params;
-console.log("REAUDIT ID:", id);
   const { data: audit, error } = await supabase
     .from("audits")
     .select("*")
     .eq("id", id)
     .single();
-
-    console.log("AUDIT DATA:", audit);
-console.log("AUDIT ERROR:", error);
 
   if (error || !audit) {
     return (
