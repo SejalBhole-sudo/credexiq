@@ -2,14 +2,16 @@
 
 export async function POST(req) {
   try {
-    const { auditResult, useCase } = await req.json();
+    const { reportData, formData } = await req.json();
 
+const auditResult = reportData;
+const useCase = formData?.useCase || "general";
     const prompt = `
 You are an expert AI infrastructure cost analyst.
 
 A user completed an AI spend audit.
 
-Current monthly spend: $${reportData.totalCurrentSpend}
+Current monthly spend: $${auditResult.totalCurrentSpend}
 Potential monthly savings: $${auditResult.totalMonthlySaving}
 Primary use case: ${useCase}
 

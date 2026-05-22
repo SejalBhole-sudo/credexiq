@@ -266,3 +266,33 @@ The change-detection workflow now tracks:
 - pricing invalidation status
 - notification execution timestamp
 - affected audit history
+
+## 2026-05-21 23:20 - Summary generation pipeline validation
+
+Investigated failures within the AI-generated audit summary workflow after observing runtime errors during summary generation.
+
+Tracing the request flow revealed a payload mismatch between the results page and the summary API endpoint. The summary route was expecting audit fields under a different structure than the payload being submitted from the client.
+
+Aligned request parsing with the actual frontend payload contract and validated successful execution of the summary endpoint.
+
+Post-fix testing confirmed:
+- successful summary request processing
+- correct audit metric extraction
+- Gemini API invocation
+- graceful fallback behavior when external model quota limits are exceeded
+
+This restored summary generation functionality and improved resilience against third-party API availability constraints.
+
+## 2026-05-22 16:35 - Pricing snapshot persistence correction
+
+While validating the end-to-end re-audit workflow, identified that historical audits were not consistently storing pricing snapshot data required for future pricing invalidation checks.
+
+Updated audit persistence to ensure each completed audit records a deterministic snapshot of the pricing data used during generation. This restores the ability to compare historical pricing states against current pricing definitions during re-audit processing.
+
+Validation confirmed newly created audits now persist:
+- user input stack
+- generated audit output
+- pricing snapshot
+- audit metadata
+
+This strengthens the pricing-change detection pipeline and ensures historical audits contain sufficient context for future recomputation.
