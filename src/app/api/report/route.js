@@ -94,14 +94,19 @@ export async function POST(req) {
       );
     }
 
-    // Save audit log (non-blocking)
+    // Determine email - use explicit email param first, fallback to formData if needed
+    const userEmail = email && email.trim() ? email : "unknown@example.com";
+
+    console.log("Creating audit with email:", userEmail);
     console.log("FORM DATA:", formData);
+    
+    // Save audit log (non-blocking)
     const { error: auditError } = await supabase
       .from("audits")
       .insert([
         {
           id: data.id,
-          user_email: email || "unknown@example.com",
+          user_email: userEmail,
           input_stack: formData || {},
           output_result: reportData,
           pricing_snapshot: createPricingSnapshot(),

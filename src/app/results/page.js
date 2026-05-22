@@ -15,6 +15,7 @@ export default function ResultsPage() {
   const [reportId, setReportId] = useState(null)
   const [mounted, setMounted] = useState(false)
   const [notification, setNotification] = useState({ show: false, message: '', type: '' })
+  const [userEmail, setUserEmail] = useState(null)
 
   useEffect(() => {
     setMounted(true)
@@ -31,7 +32,7 @@ export default function ResultsPage() {
     const result = runAudit(formData)
     setAuditData(result)
 
-    createShareableReport(result, formData)
+    createShareableReport(result, formData, null)
 
     fetch('/api/summary', {
       method: 'POST',
@@ -58,9 +59,10 @@ export default function ResultsPage() {
       })
   }, [])
 
-  const createShareableReport = async (result, formData) => {
+  const createShareableReport = async (result, formData, email) => {
     try {
       console.log("SENDING FORM DATA:", formData);
+      console.log("SENDING EMAIL:", email);
       const response = await fetch('/api/report', {
         method: 'POST',
         headers: {
@@ -69,6 +71,7 @@ export default function ResultsPage() {
         body: JSON.stringify({
           reportData: result,
           formData,
+          email: email || null,
         }),
       })
 
@@ -282,6 +285,11 @@ export default function ResultsPage() {
     auditData={auditData}
     reportId={reportId}
     onClose={() => setShowEmailModal(false)}
+    onEmailSubmitted={(email) => {
+      setUserEmail(email)
+      // Recreate report with email now that we have it
+      createShareableReport(auditData, storedFormData, email)
+    }}
   />
 )}
 
@@ -331,6 +339,7 @@ function EmailModal({
   auditData,
   reportId,
   onClose,
+  onEmailSubmitted,
 }) {
   const [formData, setFormData] = useState({
     email: '',
@@ -383,6 +392,8 @@ function EmailModal({
       if (response.ok && data.success) {
         setMessage('✅ Report sent! Check your email.')
         setMessageType('success')
+        // Notify parent that email was submitted
+        onEmailSubmitted(formData.email)
         setTimeout(() => {
           onClose()
         }, 1500)

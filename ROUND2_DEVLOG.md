@@ -296,3 +296,19 @@ Validation confirmed newly created audits now persist:
 - audit metadata
 
 This strengthens the pricing-change detection pipeline and ensures historical audits contain sufficient context for future recomputation.
+
+## 2026-05-22 17:10 - End-to-end re-audit validation completed
+
+Performed a full validation of the pricing invalidation workflow using persisted audit history.
+
+Tested flow:
+
+- create audit
+- persist pricing snapshot
+- modify official pricing
+- trigger change detection
+- regenerate affected audit
+- compute savings deltas
+- render comparison view
+
+Validation confirmed that pricing updates propagate through audit recomputation and produce updated recommendations and savings estimates. Historical and regenerated audit states are now surfaced through the re-audit comparison interface, providing clear visibility into pricing-driven recommendation changes.
