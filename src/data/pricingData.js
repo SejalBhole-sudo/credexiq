@@ -14,7 +14,7 @@ export const OFFICIAL_PRICING = {
   },
   claude: {
     Free: { pricePerSeat: 0, description: 'Free' },
-    Pro: { pricePerSeat: 22, description: '$20/user/mo' },
+    Pro: { pricePerSeat: 20, description: '$20/user/mo' },
     Max5: { pricePerSeat: 100, description: '$100/user/mo' },
     Max20: { pricePerSeat: 200, description: '$200/user/mo' },
     Team: { pricePerSeat: 25, description: '$25/user/mo, min 5 seats' },

@@ -312,3 +312,9 @@ Tested flow:
 - render comparison view
 
 Validation confirmed that pricing updates propagate through audit recomputation and produce updated recommendations and savings estimates. Historical and regenerated audit states are now surfaced through the re-audit comparison interface, providing clear visibility into pricing-driven recommendation changes.
+
+## 2026-05-22 17:35 - Re-audit notification experience enhancement
+
+Improved the re-audit notification experience by expanding email content beyond basic savings values.
+
+Notifications now communicate the impact of pricing updates through explicit monthly and annual savings deltas while providing a direct link to the re-audit comparison interface. This reduces friction between pricing change detection and audit review, allowing affected users to immediately inspect updated recommendations and savings outcomes.
